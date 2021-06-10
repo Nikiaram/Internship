@@ -34,6 +34,10 @@ namespace Proj1
             */
             #endregion
 
+            #region 2nd part
+            //Boxing using interfaces
+
+            /*
             Point p = new Point(1, 1);
             Console.WriteLine(p);
 
@@ -45,6 +49,7 @@ namespace Proj1
 
             ((Point)o).Change(3, 3);
             Console.WriteLine(o);
+            
 
             /*
              Finally, I want to call the Change method to update the
@@ -63,6 +68,7 @@ namespace Proj1
 
             // Boxes p, changes the boxed object and discards it
 
+            /*
             ((IChangeBoxedPoint)p).Change(4, 4);
             Console.WriteLine(p);
 
@@ -79,6 +85,50 @@ namespace Proj1
              expected. The purpose of this whole example is to demonstrate how an interface method is able to
              modify the fields of a boxed value type. In C#, this isn’t possible without using an interface method. 
              */
+
+            #endregion
+
+            #region 3rd part
+
+            // Boxing Nullable<T> is null or boxed T
+            /*
+            Int32? n = null;
+            Object o = n; // o is null
+            Console.WriteLine("o is null={0}", o == null); // "True"
+            n = 5;
+            o = n; // o refers to a boxed Int32
+            Console.WriteLine("o's type={0}", o.GetType()); // "System.Int32"
+            */
+
+            // Unboxing Nullable<T> types
+
+            // Create a boxed Int32
+            //Object o = 5;
+            //// Unbox it into a Nullable<Int32> and into an Int32
+            //Int32? a = (Int32?)o; // a = 5
+            //Int32 b = (Int32)o; // b = 5
+            //                    // Create a reference initialized to null
+            //o = null;
+            //// "Unbox" it into a Nullable<Int32> and into an Int32
+            //a = (Int32?)o; // a = null
+            ////b = (Int32)o; // NullReferenceException
+
+            //Int32? x = 5;
+            //// The line below displays "System.Int32"; not "System.Nullable<Int32>"
+            //Console.WriteLine(x.GetType());
+
+            Int32? n = 5;
+            //Int32 result = ((IComparable)n).CompareTo(5); // Compiles & runs OK
+            //Console.WriteLine(result); // 0
+            
+            /*
+            If the CLR didn’t provide this special support, it would be more cumbersome for you to write code
+            to call an interface method on a nullable value type.You’d have to cast the unboxed value type first
+           before casting to the interface to make the call:
+            */
+            Int32 result = ((IComparable)(Int32)n).CompareTo(5); // Cumbersome
+            Console.WriteLine(result);
+            #endregion
 
         }
         //struct Point
