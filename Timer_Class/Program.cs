@@ -8,10 +8,18 @@ namespace Timer_Class
 
         public static void Main()
         {
+            //The problem is in ways of using compiler switches,
+            //because according to the book there should be a 
+            //difference between them, but actualy I could not find it
+
+            #region 1st way without using any special compiler switches
+
+            // The problem is that the method is not called just once!
             /*
+               From the book
                Compile this code from the command prompt without using any special compiler switches. When
                you run the resulting executable file, you’ll see that the TimerCallback method is called just once!
-            */ //voncvor te chi stacvum
+            */
 
             //Managed heap
             //A C D F H
@@ -22,12 +30,48 @@ namespace Timer_Class
             //www.it - ebooks.info
             // Create a Timer object that knows to call our TimerCallback
             // method once every 2000 milliseconds.
+            //Timer t = new Timer(TimerCallback, null, 0, 2000);
+            // Wait for the user to hit <Enter>
+            //Console.ReadLine();
+
+            #endregion
+
+            #region 2nd way specify the C# compiler's debug 
+
+            //No difference between 1st and 2nd way
+            /*
+             From the book
+             Do see this, just recompile the program from a command prompt, but this time, specify the C#
+             compiler’s /debug switch. When you run the resulting executable file, you’ll now see that the
+             TimerCallback method is called repeatedly! Note, the C# compiler’s /optimize+ compiler switch
+             turns optimizations back on so this compiler switch should not be specified when performing this
+             experiment. 
+             */
+            // Create a Timer object that knows to call our TimerCallback
+            // method once every 2000 milliseconds.
+            //Timer t = new Timer(TimerCallback, null, 0, 2000);
+            // Wait for the user to hit <Enter>
+            Console.ReadLine();
+            // Refer to t after ReadLine (this gets optimized away)
+            //t = null;
+
+            #endregion
+
+            #region 3rd way 
+
+            // No difference between 1st, 2nd and 3rd way of writing the code
+
+            /* From the book
+              if you compile this (without the /debug+ switch) and run the resulting executable file,
+              you’ll see that the TimerCallback method is still called just once.
+             */
             Timer t = new Timer(TimerCallback, null, 0, 2000);
             // Wait for the user to hit <Enter>
             Console.ReadLine();
-
-            //t = null;
+            // Refer to t after ReadLine (t will survive GCs until Dispose returns)
             t.Dispose();
+
+            #endregion
         }
 
         private static void TimerCallback(Object o)
@@ -38,7 +82,7 @@ namespace Timer_Class
             GC.Collect();
         }
 
-
+        /* No problem
         //Finalizer
         internal sealed class SomeType
         {
@@ -48,11 +92,10 @@ namespace Timer_Class
                 // The code here is inside the Finalize method
             }
         }
-
-
-
+        */
     }
-
+    #region GC Notifications
+    /* No problem
     public static class GCNotification
     {
         private static Action<Int32> s_gcDone = null; // The event's field
@@ -91,8 +134,10 @@ namespace Timer_Class
                     if (m_generation == 0) new GenObject(0);
                     else GC.ReRegisterForFinalize(this);
                 }
-                else { /* Let the objects go away */ }
-            }
-        }
-    }
+                else { /* Let the objects go away */
 }
+//}
+//}
+//}
+//}
+#endregion
